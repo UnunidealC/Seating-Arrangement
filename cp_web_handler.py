@@ -6,11 +6,8 @@ from datetime import date
 
 app = Flask(__name__)
 
-x = 2
 '''
-Mark says hello
 #google signin
-Jikun and Mark says hello
 @app.route("/w")
 def google_sign_in():
     return render_template("google_sign_in.html")
