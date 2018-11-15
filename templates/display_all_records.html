@@ -136,7 +136,7 @@
             <td>
                 <form id = 'deleteform' action = '{{ url_for('delete_student_record', student_name = student.get_StudentName()) }}' method = 'POST'>
                     <input type = 'hidden' name = 'delete' value = 'False' id = 'confirm_delete'>
-                    <input class = "transbox" type = 'button' value = 'Delete' onclick="deleteFunction('{{ student.get_StudentName() }}')">
+                    <input class = "transbox" type = 'submit' value = 'Delete' onclick="deleteFunction('{{ student.get_StudentName() }}')">
                 </form>
             </td>
 
