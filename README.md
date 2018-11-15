@@ -1,10 +1,11 @@
-# seat-arr
-Seating Arrangement 2019 Application
+# Seating Arrangement Generator
+Seating Arrangement Generator 2019
 
-Done by:<br>
-Mark Chin<br>
-Chen Jiarui<br>
-Cui Xinyu<br>
-Zhang Mingkang<br>
-Teo Jeslyn<br>
-Zhang Jikun
+<h4>Done by:<h4>
+<ul>
+	<li>Mark Chin</li>
+	<li>Chen Jiarui</li>
+	<li>Cui Xinyu</li>
+	<li>Zhang Mingkang</li>
+	<li>Teo Jeslyn</li>
+	<li>Zhang Jikun</li>
