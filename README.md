@@ -1,7 +1,7 @@
 # Seating Arrangement Generator
 Seating Arrangement Generator 2019
 
-<h3>Done by:<h3>
+<h3>Done by:</h3>
 <ol>
 	<li>Mark Chin</li>
 	<li>Chen Jiarui</li>
