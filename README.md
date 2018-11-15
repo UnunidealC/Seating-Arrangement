@@ -2,6 +2,6 @@
 seating arrangement 2019 open house
 
 Mark says hello
-jikun is gay
+Github is gay
 
 Technology is the future!
