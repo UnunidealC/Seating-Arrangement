@@ -3,7 +3,7 @@ Seating Arrangement Generator 2019
 
 <h3>Done by:</h3>
 <ol>
-	<li>Mark Chin</li>
+	<li>Chin Jun Hao, Mark</li>
 	<li>Chen Jiarui</li>
 	<li>Cui Xinyu</li>
 	<li>Zhang Mingkang</li>
