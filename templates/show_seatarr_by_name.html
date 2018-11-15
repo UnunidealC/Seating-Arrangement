@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Lato' rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <meta charset="UTF-8">
+    <title>{{ seatarrname }}</title>
+    <style>
+        html{
+            width: 100%;
+            height: 100%;
+            display: block;
+            position: relative;
+        }
+
+        html::after {
+            content: "";
+            background: url('https://cucuru.media/wp-content/uploads/2017/11/shutterstock_159503861-20171113162932.jpg');
+            background-size: 100%;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        h2{
+            font-size: 26px;
+            font-family: 'Roboto';
+        }
+        .whiteboard{
+            font-size: 20px;
+            font-family: 'Roboto';
+        }
+        .words{
+            font-family: 'Lato';
+            font-size: 18px;
+        }
+        .createdon{
+            font-family: 'Lato';
+            font-size: 15px;
+            color: dimgrey;
+        }
+        .transbox {
+          background: transparent;
+          border: 1.5px solid #58585A;
+          padding-top: 1.5px;
+          padding-bottom: 1.5px;
+          padding-left: 6.5px;
+          height: 27px;
+          font-size: 16px;
+        }
+        div.overflow{
+            width: 100%;
+            height: 770px;
+            overflow: auto;
+        }
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 500px;
+        }
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .bla{
+            height: 200px;
+            display: block;
+            margin-top: auto;
+            width: 100%;
+        }
+
+     </style>
+</head>
+<body>
+
+<script>
+    console.log({{ error }});
+    function error_alert() {
+        alert({{ error }});
+    }
+    if ({{ error }} != False) {
+        error_alert();
+    }
+</script>
+
+
+
+<p></p>
+<form action = "{{url_for('show_saved_seatingarr')}}">
+    <input class="transbox" style = "font-size:16px" type="submit" value="Return to Seating Arrangements" />
+</form>
+<div class = "overflow">
+<h2>{{ seatarrname }}</h2>
+<table style = 'table-layout: fixed' align="center" border = '1'>
+    <tr>
+        <th class="whiteboard" colspan = "{{ColumnNo*3 - 1}}">White Board</th>
+    </tr>
+</table>
+<table style = 'text-align: center' align="center" border = '1' cellpadding="20">
+    {% for row in RowNoRange %}
+    <tr>
+        {% for column in ColumnNoRange %}
+            {% if (row*ColumnNo*2 + column*2 + 1) <= ClassSize %}
+            <td rowspan="2" style = "width: 10px; font-size: 15px" class="words">{{ SeatingArrangement_lst[row][column][0] }}</td>
+            {% else %}
+            <td rowspan="2" style = "width: 10px">&nbsp;</td>
+            {% endif %}
+
+            {% if (row*ColumnNo*2 + column*2 + 2) <= ClassSize %}
+            <td rowspan="2" style = "width: 10px; font-size: 15px" class="words">{{ SeatingArrangement_lst[row][column][1] }}</td>
+            {% else %}
+            <td rowspan="2" style = "width: 10px">&nbsp;</td>
+            {% endif %}
+
+            {% if column != ColumnNo -1 %}
+            <td rowspan="2" style = "width: 5px" bgcolor="#888888">&nbsp;</td>
+            {% endif %}
+
+        {% endfor %}
+    </tr>
+    <tr>&nbsp;</tr>
+    {% endfor %}
+
+</table>
+<p></p>
+<hr>
+
+<h2 style="font-size: 24px">Comments</h2>
+
+<form action = "{{url_for('create_comment', seatarrname = seatarrname)}}">
+    <input class="transbox" style = "font-size:15px" type="submit" value="Create a comment" />
+</form>
+
+{% for comment in comments %}
+
+<p class="whiteboard" style = "font-weight:bold; font-size: 19px">
+    {{comment.get_UserName()}}
+</p>
+
+<p class="words" style = "font-size: 15px">
+    {{comment.get_CommentText()}}
+</p>
+
+<table style = "width:20%; text-align:left">
+
+    <tr>
+        <td class="createdon">Created on {{comment.get_CommentDatetime()}}</td>
+        <td>
+            <button id = 'editBtn' class = 'transbox' onclick = 'editFunction("{{ comment.get_CommentID()}}", "{{comment.get_CommentText() }}");modalbtn()'>Edit</button>
+        </td>
+        <td>
+            <form id = 'deleteform' action = "{{ url_for('delete_comment')}}" method = "POST">
+                <input type = 'hidden' name = 'delete' value = 'False' id = 'confirm_delete'>
+                <input class = 'transbox' style = "font-size:16px" type = 'button' value = 'Delete' onclick="deleteFunction('{{ comment.get_CommentID() }}')">
+            </form>
+        </td>
+    </tr>
+
+</table>
+<hr>
+
+{% endfor %}
+
+<script>
+    function deleteFunction(CommentID) {
+        var txt = "Are you sure you want to delete this comment?";
+        var confirm_delete = confirm(txt);
+        console.log('confirm_delete:',confirm_delete);
+        if (confirm_delete != false && confirm_delete != '') {
+            document.getElementById("confirm_delete").value = CommentID;
+            document.getElementById("deleteform").submit();
+        }
+    }
+</script>
+
+<!-- Modal -->
+<div id = 'editModal' class = 'modal'>
+    <!-- Modal content -->
+    <div class = 'modal-content'>
+        <span class = "close">&times;</span>
+        <span>
+
+        <form id = 'editForm' action = "{{url_for('edit_comment')}}" method = "POST">
+            <input  type = 'hidden' name = 'CommentID'>
+
+            <p>Comment Text:</p>
+            <textarea rows = '10' cols = "50" style="font-size: 15px" name = "CommentText" wrap = "hard"></textarea>
+            <script>
+                $("textarea").keypress(function(event) {
+                    if(event.keyCode==13) {
+                        event.preventDefault();
+                    }
+                });
+            </script>
+
+            <p></p>
+            <input type = 'submit' value = 'Update'>
+
+        </form>
+        </span>
+    </div>
+
+</div>
+
+<script>
+    function editFunction(CommentID, CommentText){
+        console.log(1, CommentText);
+        var form = document.forms['editForm'];
+        form.elements['CommentID'].value = CommentID;
+        form.elements['CommentText'].value = CommentText;
+    }
+</script>
+
+<script>
+    //Get the modal
+    var modal = document.getElementById('editModal');
+    //Get the button that opens the modal
+    var btn = document.getElementById('editBtn');
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks the button, open the modal
+    function modalbtn(){
+       modal.style.display = "block";
+    };
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    };
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+</div>
+
+</body>
+</html>

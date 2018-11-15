@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lato' rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Seating Arrangement Set-Up</title>
+    <style>
+        html{
+            width: 100%;
+            height: 100%;
+            display: block;
+            position: relative;
+        }
+
+        html::after {
+            content: "";
+            background: url('https://cucuru.media/wp-content/uploads/2017/11/shutterstock_159503861-20171113162932.jpg');
+            background-size: 100%;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        h2{
+            font-size: 26px;
+            font-family: 'Roboto';
+        }
+        .words{
+            font-family: 'Lato';
+            font-size: 18px;
+            weight: bold;
+        }
+        .cancel{
+            font-family: 'Lato';
+            font-size: 18px;
+        }
+        .transbox {
+          background: transparent;
+          border: 1.5px solid #58585A;
+          padding-top: 1.5px;
+          padding-bottom: 1.5px;
+          padding-left: 5px;
+          height: 25px;
+          font-size: 16px;
+        }
+        div.overflow{
+            width: 100%;
+            height: 770px;
+            overflow: auto;
+        }
+     </style>
+</head>
+
+<body>
+<h2 style="height:10px">Seating Arrangement Set-Up</h2>
+<div class = "overflow">
+<form action = '{{ url_for('special_class_seating_arrangement')}}' method = "POST">
+    <p class = "words">Please select the class(es) involved:</p>
+    <div class="words" style="font-size: 16px">
+    {% for i in class_range %}
+    <input type = 'checkbox' name = '{{"ClassName{}".format(i)}}' value = {{valid_classes[i]}}>{{ valid_classes[i] }}<br>
+    {% endfor %}
+    </div>
+
+    <p class = "words">Subject:</p>
+    <select name = "SubjectName" value = "{{valid_subjects[0]}}">
+        {% for subject in valid_subjects %}
+        <option>{{subject}}</option>
+        {% endfor %}
+    </select>
+    <p></p>
+    {% if "SubjectName" != None: %}
+        <input class = "transbox" type = "submit" formaction = 'set_student_details' value = 'Next'>
+    {% endif %}
+
+</form>
+
+<p></p>
+<a class = "cancel" href = '{{ url_for('set_seating_arrangement') }}'>Back</a>
+</div>
+</body>
+</html>

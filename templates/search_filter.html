@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lato' rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+#myInput {
+  background-image: url('https://image.flaticon.com/icons/svg/181/181562.svg');
+  background-size: 1.9%;
+  background-position: 7px 7px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid black;
+  margin-bottom: 12px;
+  background-color: transparent;
+}
+#myInput.placeholder{
+
+}
+
+#myTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid black;
+  font-size: 18px;
+}
+
+#myTable th, #myTable td {
+  text-align: left;
+  padding: 12px;
+}
+
+#myTable tr {
+  border-bottom: 1px solid black;
+}
+
+#myTable tr.header {
+  background-color: lightgrey;
+}
+
+#myTable tr.results:hover {
+  background-color: whitesmoke;
+}
+html{
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: relative;
+}
+html::after {
+    content: "";
+    background: url('https://cucuru.media/wp-content/uploads/2017/11/shutterstock_159503861-20171113162932.jpg');
+    background-size: 100%;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
+    opacity: 0.5;
+}
+        h2{
+            font-size: 20px;
+            font-family: 'Roboto';
+        }
+        .words{
+            font-family: 'Lato';
+            font-size: 16.5px;
+            weight: bold;
+        }
+        .title{
+            font-family: 'Roboto';
+            font-size: 19px;
+        }
+        .cancel{
+            font-family: 'Lato';
+            font-size: 17px;
+        }
+        .transbox {
+          background: transparent;
+          border: 1.5px solid #58585A;
+          padding-top: 1.5px;
+          padding-bottom: 1.5px;
+          padding-left: 6.5px;
+          height: 27px;
+          font-size: 16px;
+        }
+        div.overflow{
+            width: 100%;
+            height: 700px;
+            overflow: auto;
+        }
+        ::placeholder {
+            color: darkslategray;
+            opacity: 0.9; /* Firefox */
+        }
+
+        :-ms-input-placeholder { /* Internet Explorer 10-11 */
+           color: darkslategray;
+        }
+
+        ::-ms-input-placeholder { /* Microsoft Edge */
+           color: darkslategray;
+        }
+</style>
+</head>
+<body>
+
+<p></p>
+<form action = "{{url_for('show_saved_seatingarr')}}">
+    <input class="transbox" style = "font-size:18px;height:29px" type="submit" value="Return to Seating Arrangements" />
+</form>
+<p></p>
+
+<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for Seating Arrangements..." title="Type in a name">
+<div class = "overflow">
+<table id="myTable">
+  <tr class="header">
+      <th class="title" style="width:15%;">Seating Arrangement Name</th>
+    <th style="width:5%;"></th>
+  </tr>
+
+  {% for sr in seatarr %}
+  <tr class="results">
+      <td class="words">{{sr.get_SeatArrName()}}</td>
+      <td>
+          <form action = "{{url_for('show_seatarr_by_name', seatarrname = sr.get_SeatArrName())}}">
+                <input class="transbox" style = "font-size:16px;height:27px" type="submit" value="View Seating Arrangement"/>
+          </form>
+      </td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+
+<script>
+function myFunction() {
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+</script>
+
+</body>
+</html>
+

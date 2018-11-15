@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lato' rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Edit Student Record</title>
+    <style>
+        html{
+            width: 100%;
+            height: 100%;
+            display: block;
+            position: relative;
+        }
+
+        html::after {
+            content: "";
+            background: url('https://cucuru.media/wp-content/uploads/2017/11/shutterstock_159503861-20171113162932.jpg');
+            background-size: 100%;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        .transbox {
+          background: transparent;
+          border: 1.5px solid #58585A;
+          padding-top: 4.5px;
+          padding-bottom: 4.5px;
+          padding-left: 2px;
+          height: 17px;
+          font-size: 16px;
+        }
+        .words{
+            font-family: 'Lato';
+            font-size: 18px;
+            weight: bold;
+        }
+        .cancel{
+            font-family: 'Lato';
+            font-size: 18px;
+        }
+        ::placeholder {
+            color: black;
+            opacity: 0.6; /* Firefox */
+        }
+
+        :-ms-input-placeholder { /* Internet Explorer 10-11 */
+           color: #58585A;
+        }
+
+        ::-ms-input-placeholder { /* Microsoft Edge */
+           color: #58585A;
+        }
+        h2{
+            font-size: 26px;
+            font-family: 'Roboto';
+        }
+     </style>
+</head>
+<body>
+<h2>Edit Student Record</h2>
+
+{% if error != False: %}
+<p style="color:#BF3F36; font-family: 'Roboto'; font-size: 19px">
+    <b>{{error}}</b>
+</p>
+{% endif %}
+
+<form action = '{{ url_for('edit_student_record',student_name = edit_student_details.get_StudentName()) }}' method = "POST">
+    <p class = "words">Name:</p>
+    <input class="transbox" type = "text" size = '30' name = "StudentName" value = "{{edit_student_details.get_StudentName() }}" readonly>
+
+    <p class = "words">Register No.:</p>
+    <input class="transbox" type = "text" size = '30' name = "StudentRegNo" value = "{{edit_student_details.get_StudentRegNo()}}" >
+
+    <p class = "words">Class:</p>
+    <input class="transbox" type = "text" size = '30' name = "ClassName" value = "{{edit_student_details.get_ClassName() }}" readonly>
+
+    <p class = "words">Gender:</p>
+    <input class="transbox" type = 'text' size = '30' name = 'StudentGender' value = '{{ edit_student_details.get_StudentGender() }}'>
+
+    <p class = "words"></p>
+    <table style = 'width: 50%; text-align: left'>
+        <tr>
+            <td class = "words">Subject:</td>
+            <td class = "words">Grade:</td>
+        </tr>
+        {% for i in range %}
+        <tr>
+            <td><input class="transbox" type = "text" size = '30' name = '{{"SubjectName{}".format(i)}}' value = "{{edit_student_details.get_StudentSubjectCombi().split(' ')[i]}}" > </td>
+            <td><input class="transbox" type = "text" size = '30' name = '{{"SubjectGrade{}".format(i)}}' value = "{{edit_student_details.get_AllSubjectGrades().split(' ')[i]}}" > </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <p></p>
+    <input class = "transbox" style = "padding: 1px; padding-left: 3px; padding-right:3px; height:28px; font-size:17px" type = 'submit' value = 'Update'>
+
+</form>
+
+<p></p>
+<a class = "cancel" href = "{{ url_for('display_all_student_records') }}">Cancel</a>
+
+</body>
+</html>

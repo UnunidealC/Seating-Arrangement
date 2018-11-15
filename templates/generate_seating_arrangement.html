@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lato' rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Generated Seating Arrangement</title>
+    <style>
+        th, td{border: 1px solid black;}
+        html{
+            width: 100%;
+            height: 100%;
+            display: block;
+            position: relative;
+        }
+
+        html::after {
+            content: "";
+            background: url('https://cucuru.media/wp-content/uploads/2017/11/shutterstock_159503861-20171113162932.jpg');
+            background-size: 100%;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        h2{
+            font-size: 26px;
+            font-family: 'Roboto';
+        }
+        .whiteboard{
+            font-size: 20px;
+            font-family: 'Roboto';
+        }
+        .words{
+            font-family: 'Lato';
+            font-size: 18px;
+            weight: bold;
+        }
+        .cancel{
+            font-family: 'Lato';
+            font-size: 17px;
+        }
+        .transbox {
+          background: transparent;
+          border: 1.5px solid #58585A;
+          padding-top: 1.5px;
+          padding-bottom: 1.5px;
+          padding-left: 6.5px;
+          height: 27px;
+          font-size: 16px;
+        }
+        .notes{
+            color: #58585A;
+            font-family: 'Lato';
+            font-size: 16px;
+        }
+        div.overflow{
+            width: 100%;
+            height: 770px;
+            overflow: auto;
+        }
+     </style>
+</head>
+<body>
+<h2 style="height: 17px">Generated Seating Arrangement</h2>
+<div class = "overflow">
+<table style = 'table-layout: fixed' align="center" border = '1'>
+    <tr>
+        <th colspan = "{{ColumnNo*3 - 1}}" class="whiteboard">White Board</th>
+    </tr>
+</table>
+<table style = 'text-align: center' align="center" border = '1' cellpadding="20">
+    {% for row in RowNoRange %}
+    <tr>
+        {% for column in ColumnNoRange %}
+            {% if (row*ColumnNo*2 + column*2 + 1) <= ClassSize %}
+            <td rowspan="2" style = "width: 10px" class="words">{{ SeatingArrangement_lst[row][column][0] }}</td>
+            {% else %}
+            <td rowspan="2" style = "width: 10px">&nbsp;</td>
+            {% endif %}
+
+            {% if (row*ColumnNo*2 + column*2 + 2) <= ClassSize %}
+            <td rowspan="2" style = "width: 10px" class="words">{{ SeatingArrangement_lst[row][column][1] }}</td>
+            {% else %}
+            <td rowspan="2" style = "width: 10px">&nbsp;</td>
+            {% endif %}
+
+            {% if column != ColumnNo -1 %}
+            <td rowspan="2" style = "width: 5px" bgcolor="#888888">&nbsp;</td>
+            {% endif %}
+
+        {% endfor %}
+    </tr>
+    <tr>&nbsp;</tr>
+    {% endfor %}
+
+</table>
+<p></p>
+
+<form action = 'generate_seating_arrangement_again'>
+<input class="transbox" type= "submit" value = "Generate Another Seating Arrangement"/>
+</form>
+
+<p class="notes">Note: By going to another page, this seating arrangement will be gone.</p>
+
+<a class="cancel" href = '{{ url_for('set_seating_arrangement') }}'>Back To Settings Menu</a>
+
+<p></p>
+<a class="cancel" href = '{{ url_for('display_all_student_records') }}'>Back to Home Page</a>
+
+<p></p>
+<a class="cancel" href = '{{ url_for('show_saved_seatingarr') }}'>View Saved Seating Arrangements</a>
+
+<p></p>
+<form action = '{{ url_for('save_seatarr')}}' method = "POST">
+    <input type = 'hidden' name = 'savedname' value = '' id = 'name'>
+    <input type = 'hidden' name = 'SeatingArrangement_lst' value = "{{(SeatingArrangement_lst)}}">
+    <input type = 'hidden' name = 'RowNo' value = '{{RowNo}}'>
+    <input type = 'hidden' name = 'ColumnNo' value = '{{ColumnNo}}'>
+    <input class="transbox" type = 'submit' value = 'Save this seating arrangement' onclick="myFunction()">
+</form>
+</div>
+<script>
+function myFunction() {
+    var seatarrname = prompt("Please name your seating arrangement:");
+    document.getElementById("name").value = seatarrname;
+}
+</script>
+</body>
+</html>

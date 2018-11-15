@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Rubik' rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lato' rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <style>
+        html{
+            width: 100%;
+            height: 100%;
+            display: block;
+            position: relative;
+        }
+
+        html::after {
+            content: "";
+            background: url('https://cucuru.media/wp-content/uploads/2017/11/shutterstock_159503861-20171113162932.jpg');
+            background-size: 100%;
+            background-position: 0% 50%;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        .btn-group .button {
+            font-family: "Rubik";
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 20px;
+            cursor: pointer;
+            width: 33.3%;
+            border: none;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+            padding: 5px;
+            float: left;
+        }
+
+        .btn-group .button1 {
+            background: url('https://previews.123rf.com/images/silm/silm1305/silm130500088/20010469-abstract-beige-background-sketchy-doodle-seamless-pattern-light-texture-with-circles-squares-and-oth.jpg');
+            color: black;
+        }
+
+        .btn-group .button1:hover {
+            background: white;
+            color: black;
+        }
+
+        .btn-group .button2 {
+            background: url('http://www.photos-public-domain.com/wp-content/uploads/2013/11/bumpy-beige-plastic-texture.jpg');
+            color: black;
+
+        }
+
+        .btn-group .button2:hover {
+            background: white;
+            color: black;
+        }
+
+        .btn-group .button3 {
+            background: url('http://allfreedesigns.com/wp-content/uploads/2013/05/cork-texture-17.jpg');
+            color: black;
+            opacity: 0.9;
+        }
+
+        .btn-group .button3:hover {
+            background: white;
+            color: black;
+            opacity: 1.0;
+        }
+        table{
+            font-family: "Lato";
+        }
+        div.studentrecords{
+            width: 100%;
+            height: 670px;
+            overflow: auto;
+        }
+        .transbox {
+          background: transparent;
+          border: 1.5px solid #58585A;
+          padding-top: 1px;
+          padding-bottom: 1.5px;
+          padding-left: 5px;
+          height: 24px;
+          font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<table style = "width: 100%; text-align: left">
+    <tr>
+        <th style = "width: 50%;">
+            <div class="btn-group">
+                <button class="button button1" onclick ="location.href = '{{url_for('create_student_record')}}'">Create Student Record</button>
+                <button class="button button2" onclick ="location.href = '{{url_for('set_seating_arrangement')}}'">Generate Seating Arrangement</button>
+                <button class="button button3" onclick ="location.href = '{{url_for('show_saved_seatingarr')}}'">Saved Seating Arrangements</button>
+            </div>
+        </th>
+    </tr>
+</table>
+<hr>
+<h2 style = "font-family: 'Roboto'; font-size: 26px">All Student Records</h2>
+<div class = "studentrecords">
+<table style = "width: 97%; text-align: left">
+    {% for class in classes %}
+    <tr>
+        <th style = "font-size: 19px">{{ class.get_ClassName() }}</th>
+    </tr>
+    <tr style = "font-size: 18px">
+        <th>Name</th>
+        <th>Register No.</th>
+        <th>Gender</th>
+        <th>Subject Combination</th>
+        <th>Grades (in order)</th>
+    </tr>
+
+        {% for student in students %}
+        {% if class.get_ClassName() == student.get_ClassName()%}
+        <tr style = "font-size: 18px">
+            <td> {{student.get_StudentName()}} </td>
+            <td>{{ student.get_StudentRegNo() }}</td>
+            <td>{{ student.get_StudentGender() }}</td>
+            <td>{{ student.get_StudentSubjectCombi() }}</td>
+            <td>{{ student.get_AllSubjectGrades() }}</td>
+            <td><a class="transbox" style="padding-right: 4px" onclick ='location.href = "{{url_for('edit_student_record', student_name = student.get_StudentName())}}"'>Edit</a></td>
+            <td>
+                <form id = 'deleteform' action = '{{ url_for('delete_student_record', student_name = student.get_StudentName()) }}' method = 'POST'>
+                    <input type = 'hidden' name = 'delete' value = 'False' id = 'confirm_delete'>
+                    <input class = "transbox" type = 'button' value = 'Delete' onclick="deleteFunction('{{ student.get_StudentName() }}')">
+                </form>
+            </td>
+
+        </tr>
+        {% endif %}
+        {% endfor %}
+    <tr>
+        <th>&nbsp;</th>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+
+<script>
+    function deleteFunction(StudentName) {
+        var txt = "Are you sure you want to delete " + StudentName + "'s record?";
+        var confirm_delete = confirm(txt);
+        console.log('confirm_delete:',confirm_delete);
+        if (confirm_delete != false && confirm_delete != '') {
+            document.getElementById("confirm_delete").value = StudentName;
+            document.getElementById("deleteform").submit();
+        }
+    }
+</script>
+</body>
+</html>

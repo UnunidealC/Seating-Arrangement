@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lato' rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Edit Comment</title>
+    <style>
+        html{
+            width: 100%;
+            height: 100%;
+            display: block;
+            position: relative;
+        }
+
+        html::after {
+            content: "";
+            background: url('https://cucuru.media/wp-content/uploads/2017/11/shutterstock_159503861-20171113162932.jpg');
+            background-size: 100%;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        .words{
+            font-family: 'Lato';
+            font-size: 18px;
+            weight: bold;
+        }
+     </style>
+</head>
+<body>
+
+<h1>Edit Comment</h1>
+
+{% if error != False: %}
+<p>
+    {{error}}
+</p>
+{% endif %}
+
+<form action = "{{url_for('edit_comment', comment_id = edit_comment.get_CommentID())}}" method = "POST">
+    <p>Seat Arrangement Name:</p>
+    <input type = "text" size = "30" name = "SeatArrName" value = "{{edit_comment.get_SeatArrName()}}" readonly>
+
+    <p>Comment ID:</p>
+    <input type = "text" size = "30" name = "CommentID" value = "{{edit_comment.get_CommentID()}}" readonly>
+
+    <p class = "words">Comment Text:</p>
+    <input type = "text" size = "30" name = "CommentText" value = "{{edit_comment.get_CommentText()}}">
+
+    <p>Comment Date:</p>
+    <input type = "text" size = "30" name = "CommentDatetime" value = "{{edit_comment.get_CommentDatetime()}}" readonly>
+
+    <p>UserName:</p>
+    <input type = "text" size = "30" name = "UserName" value = "{{edit_comment.get_UserName()}}" readonly>
+
+    <p></p>
+    <input type = 'submit' value = 'Update'>
+
+</form>
+
+<p></p>
+<form action = "{{url_for('show_seatarr_by_name', seatarrname = edit_comment.get_SeatArrName())}}">
+    <input style = "font-size:32px" type="submit" value="Cancel" />
+</form>
+
+</body>
+</html>

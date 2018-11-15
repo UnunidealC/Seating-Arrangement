@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Comment</title>
+    <style>
+        html{
+            width: 100%;
+            height: 100%;
+            display: block;
+            position: relative;
+        }
+
+        html::after {
+            content: "";
+            background: url('https://cucuru.media/wp-content/uploads/2017/11/shutterstock_159503861-20171113162932.jpg');
+            background-size: 100%;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: -1;
+            opacity: 0.5;
+        }
+     </style>
+</head>
+<body>
+
+<h1>Delete Comment</h1>
+<form action = "{{url_for('delete_comment', comment_id = delete_comment.get_CommentID())}}" method = "POST">
+    <p>Seat Arrangement Name:</p>
+    <input type = "text" size = "30" name = "SeatArrName" value = "{{delete_comment.get_SeatArrName()}}" readonly>
+
+    <p>Comment ID:</p>
+    <input type = "text" size = "30" name = "CommentID" value = "{{delete_comment.get_CommentID()}}" readonly>
+
+    <p>Comment Text:</p>
+    <input type = "text" size = "30" name = "CommentText" value = "{{delete_comment.get_CommentText()}}" readonly>
+
+    <p>Comment Date:</p>
+    <input type = "text" size = "30" name = "CommentDatetime" value = "{{delete_comment.get_CommentDatetime()}}" readonly>
+
+    <p>UserName:</p>
+    <input type = "text" size = "30" name = "UserName" value = "{{delete_comment.get_UserName()}}" readonly>
+
+    <p></p>
+    <input type = 'submit' value = 'Delete'>
+
+</form>
+
+<p></p>
+<form action = "{{url_for('show_seatarr_by_name', seatarrname = delete_comment.get_SeatArrName())}}">
+    <input style = "font-size:32px" type="submit" value="Cancel" />
+</form>
+
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lato' rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Saved Seating Arrangements</title>
+    <style>
+        html{
+            width: 100%;
+            height: 100%;
+            display: block;
+            position: relative;
+        }
+
+        html::after {
+            content: "";
+            background: url('https://cucuru.media/wp-content/uploads/2017/11/shutterstock_159503861-20171113162932.jpg');
+            background-size: 100%;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        h2{
+            font-size: 26px;
+            font-family: 'Roboto';
+        }
+        .words{
+            font-family: 'Lato';
+            font-size: 18px;
+            weight: bold;
+        }
+        .transbox {
+          background: transparent;
+          border: 1.5px solid #58585A;
+          padding-top: 1.5px;
+          padding-bottom: 1.5px;
+          padding-left: 6.5px;
+          height: 27px;
+          font-size: 16px;
+          font-family: 'Lato';
+        }
+        div.overflow{
+            width: 100%;
+            height: 770px;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+<div class = "overflow">
+<table style = "width:99%">
+    <tr >
+        <th align = "left">
+            <h2 style="height: 17px">Saved Seating Arrangements</h2>
+        </th>
+        <th align = "right">
+            <form action = "{{url_for('search_filter')}}">
+                <input class="transbox" style = "font-size:20px; height:32px" type="submit" value="Search" />
+            </form>
+        </th>
+    </tr>
+</table>
+
+<table style = "width: 100%; text-align: left">
+    <tr>
+        <th class="words" style="font-size:20px"><b>Name:</b></th>
+    </tr>
+
+    {% for seatarrname in seatarrname_lst %}
+    <tr>
+        <td style = "width:50%"><a class="words" style="font-size: 17px" href="{{ url_for('show_seatarr_by_name', seatarrname = seatarrname) }}">{{ seatarrname }}</a></td>
+        <td style = "width:5%">
+            <form id = 'editform' action = "{{ url_for('edit_saved_seatingarr')}}" method = "POST">
+                <input type = 'hidden' name = 'newname' value = '' id = 'name'>
+                <input class="transbox" type = 'button' value = 'Rename' onclick='editFunction("{{ seatarrname}}", "{{ seatarrname_lst }}")'>
+            </form>
+        </td>
+        <td style = "width:10%">
+            <form id = 'deleteform' action = "{{ url_for('delete_saved_seatingarr')}}" method = "POST">
+                <input type = 'hidden' name = 'delete' value = 'False' id = 'confirm_delete'>
+                <input class="transbox" type = 'button' value = 'Delete' onclick="deleteFunction('{{ seatarrname }}')">
+            </form>
+        </td>
+    </tr>
+    <tr>&nbsp</tr>
+    {% endfor %}
+</table>
+</div>
+<p></p>
+<a class="transbox" style="font-size:18px;padding:5px;height:20px;" onclick ="location.href = '{{ url_for('display_all_student_records') }}'">Return to Home Page</a>
+
+<script>
+    function onlywhitespace(str){
+        return (str.trim() == ''); // boolean (`true` if field is empty)
+    }
+
+    function editFunction(currentname, seatarrname_lst) {
+        var txt = "Current name is " + currentname;
+        var done = false;
+        while (done == false){
+            var seatarrname = prompt(txt + '\nRename to:');
+
+            if (seatarrname == null){
+                var done = true;
+            }
+            if (seatarrname == "" || onlywhitespace(seatarrname) == true) {
+                alert('Empty entry, please fill in a valid name.');
+            }
+            else {
+                var done = true;
+                var temp = seatarrname_lst.split("'");
+                console.log(temp);
+                var len = temp.length;
+                var lst = [];
+                for (i = 0; i < len; i++){
+                    lst[i] = temp[i];
+                }
+                console.log(lst);
+                console.log(seatarrname);
+                console.log(lst.indexOf(seatarrname));
+                if (seatarrname != currentname && lst.indexOf(seatarrname) != -1){
+                    console.log('hello');
+                    replaceFunction(currentname, seatarrname);
+                    break
+                }
+                else{
+                    document.getElementById("name").value = seatarrname + ',' + currentname;
+                    document.getElementById("editform").submit();
+                }
+            }
+        }
+
+    }
+
+    function replaceFunction(currentname, seatarrname){
+        var confirm_replace = confirm('A seating arrangement with this name already exists.\nDo you want to replace it?');
+        if (confirm_replace != false) {
+            document.getElementById("name").value = seatarrname + ',' + currentname + ',True';
+            document.getElementById("editform").submit();
+        }
+        else {
+            document.getElementById("name").value = currentname + ',' + currentname;
+            document.getElementById("editform").submit();
+        }
+    }
+
+    function deleteFunction(currentname) {
+        var txt = "Are you sure you want to delete " + currentname;
+        var confirm_delete = confirm(txt + '?');
+        console.log('confirm_delete:',confirm_delete);
+        if (confirm_delete != false && confirm_delete != '') {
+            document.getElementById("confirm_delete").value = currentname;
+            document.getElementById("deleteform").submit();
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lato' rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Create Comment</title>
+    <style>
+        html{
+            width: 100%;
+            height: 100%;
+            display: block;
+            position: relative;
+        }
+
+        html::after {
+            content: "";
+            background: url('https://cucuru.media/wp-content/uploads/2017/11/shutterstock_159503861-20171113162932.jpg');
+            background-size: 100%;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        .transbox {
+          background: transparent;
+          border: 1.5px solid #58585A;
+          padding-top: 4.5px;
+          padding-bottom: 4.5px;
+          padding-left: 2px;
+          height: 17px;
+          font-size: 16px;
+        }
+        h2{
+            font-size: 26px;
+            font-family: 'Roboto';
+        }
+        .notes{
+            color: #58585A;
+            font-family: 'Lato';
+            font-size: 16.5px;
+        }
+        .words{
+            font-family: 'Lato';
+            font-size: 18px;
+            weight: bold;
+        }
+        .cancel{
+            font-family: 'Lato';
+            font-size: 18px;
+        }
+     </style>
+</head>
+<body>
+
+<h2>Create Comment</h2>
+
+{% if error != False: %}
+<p style="color:#BF3F36; font-family: 'Roboto'; font-size: 19px">
+    <b>{{error}}</b>
+</p>
+{% endif %}
+
+<form action = "{{url_for('create_comment', seatarrname = seatarrname)}}" method = "POST">
+    <input type = "hidden" size = "30" name = "SeatArrName" value = "{{seatarrname}}">
+
+    <p class="words">UserName:</p>
+    <textarea class="transbox" cols = "30" rows = '1' name = "UserName" placeholder = "Enter your username..."></textarea>
+
+    <input type = "hidden" size = "30" name = "CommentID" value = "{{new_CommentID}}">
+
+    <p class="words">Comment Text:</p>
+    <textarea class="transbox" cols = "50" rows = '10' name = "CommentText" placeholder = "Write a comment..." ></textarea>
+
+    <input type = "hidden" size = "30" name = "CommentDatetime" value = "{{today}}">
+
+    <p></p>
+    <input class="transbox" style ="height:28px;" type = 'submit' value = 'Create'>
+
+</form>
+
+<p></p>
+<a class = "cancel" href = '{{ url_for('show_seatarr_by_name', seatarrname = seatarrname) }}'>Cancel</a>
+
+</body>
+</html>
