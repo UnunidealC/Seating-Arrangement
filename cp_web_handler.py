@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, request, redirect
-from SQLiteGenerator.SQLiteOOP import Class, Student, StudentRecords, Subject, SeatingArrangement, User, CurrentUser, SavedSeatArr, Comment, UserInfo
+from SQLiteGenerator.SQLiteOOP import Class, Student, StudentRecords, Subject, SeatingArrangement, User, CurrentUser, SavedSeatArr, Comment, UserInfo, SubjectAbbrev, SubjectFull
 from database_handler import execute_sql
 import random
 from datetime import date
@@ -252,7 +252,7 @@ def subject_description(subject_name):
         elif name == 'CLL':
             return 'Chinese Language and Literature'
         elif name == 'LIT':
-            return ""
+            return 'Literature in English'
         elif name == 'FM':
             return "Further Mathematics"
         elif name == 'TS':
@@ -284,6 +284,7 @@ def hasNumbers(inputString):
 #Create Student Record
 @app.route("/create_student_record", methods = ['GET','POST'])
 def create_student_record():
+
     if request.method == 'POST':
         error = False
         if request.form['ClassName'].strip() == "":
@@ -293,33 +294,40 @@ def create_student_record():
             error = "Invalid Class, Class should consist of one number and one letter (e.g. 6M)"
 
         elif len(request.form['ClassName'].strip()) == 2:
-            if not (request.form['ClassName'].strip()[0].isdigit() and request.form['ClassName'][1].strip().isalpha()):
-                error = "Invalid Class, Class should consist of one number and one letter (e.g. 6M)"
-                return render_template("create_student_record.html", error=error)
+            if not (request.form['ClassName'].strip()[0].isdigit() and request.form['ClassName'][1].strip().isalpha() and
+                    ord(request.form['ClassName'][1].strip()) >= 65 and ord(request.form['ClassName'][1].strip()) <= 90 ):
+                error = "Invalid Class, Class should consist of one number and one capital letter (e.g. 6M)"
+                return render_template('create_student_record.html', SubjectAbbrev=SubjectAbbrev,
+                                    SubjectFull=SubjectFull, error=error)
 
         existing_students = execute_sql("SELECT * FROM Student WHERE ClassName = '{}'".format(request.form['ClassName'].strip()))
         existing_regno = list(map(lambda tuple: tuple[1], existing_students))
 
         if request.form['StudentName'].strip() == "":
             error = "Invalid Name, Please write something for Name..."
-            return render_template("create_student_record.html", error=error)
+            return render_template('create_student_record.html', SubjectAbbrev=SubjectAbbrev,
+                                    SubjectFull=SubjectFull, error=error)
 
         elif hasNumbers(request.form['StudentName']):
             error = "Invalid Name, Name should not contain numbers"
-            return render_template("create_student_record.html", error=error)
+            return render_template('create_student_record.html', SubjectAbbrev=SubjectAbbrev,
+                                    SubjectFull=SubjectFull, error=error)
 
         elif request.form['StudentRegNo'].strip() == "":
             error = "Invalid Register No., Please write something for Register No..."
-            return render_template("create_student_record.html", error=error)
+            return render_template('create_student_record.html', SubjectAbbrev=SubjectAbbrev,
+                                    SubjectFull=SubjectFull, error=error)
 
         elif not request.form['StudentRegNo'].strip().isdigit():
             error = "Invalid Register No., Register No. should only consist of numbers"
-            return render_template("create_student_record.html", error=error)
+            return render_template('create_student_record.html', SubjectAbbrev=SubjectAbbrev,
+                                    SubjectFull=SubjectFull, error=error)
 
         if request.form['StudentRegNo'].strip().isdigit():
             if int(request.form['StudentRegNo'].strip()) in existing_regno:
                 error = "Register No. has already been used, please key in another register no."
-                return render_template("create_student_record.html", error=error)
+                return render_template('create_student_record.html', SubjectAbbrev=SubjectAbbrev,
+                                    SubjectFull=SubjectFull, error=error)
 
         if request.form['StudentGender'].strip() == "":
             error = "Invalid Gender, Please write something for Gender..."
@@ -330,14 +338,24 @@ def create_student_record():
         elif request.form['StudentSubjectCombi'].strip() == "":
             error = "Invalid Subject Combination, Please write something for Subject Combination..."
 
-        elif request.form['AllSubjectGrades'].strip() == "":
+        for SubCom in list(request.form['StudentSubjectCombi'].split(' ')):
+            if SubCom[:3:] not in SubjectAbbrev:
+                error = 'Invalid Subject Combination, An impossible subject was entered'
+
+        for SubGrade in (list(filter(lambda x: x != ' ', request.form['AllSubjectGrades'].strip()))):
+            if SubGrade not in ['A', 'B', 'C', 'D', 'E', 'S', 'U']:
+                print(SubGrade, 'Subgrade')
+                error = 'Invalid Grades, An impossible grade was entered'
+
+        if request.form['AllSubjectGrades'].strip() == "":
             error = "Invalid Grades, Please write something for Grades..."
 
         elif len(request.form['StudentSubjectCombi'].strip().split(" ")) != len(request.form['AllSubjectGrades'].strip().split(" ")):
             error = "Number of grades should correspond to number of subjects keyed in"
 
         if error != False:
-            return render_template("create_student_record.html", error = error)
+            return render_template('create_student_record.html', SubjectAbbrev=SubjectAbbrev,
+                                    SubjectFull=SubjectFull, error=error)
 
         #Create Class object
         new_class = Class(request.form.get('ClassName').strip(),'')
@@ -368,7 +386,8 @@ def create_student_record():
         return redirect(url_for('display_all_student_records'))
 
     else:
-        return render_template('create_student_record.html')
+        return render_template('create_student_record.html', SubjectAbbrev=SubjectAbbrev,
+           SubjectFull=SubjectFull)
 
 @app.route("/set_seating_arrangement")
 def set_seating_arrangement():

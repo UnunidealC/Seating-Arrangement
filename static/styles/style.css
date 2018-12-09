@@ -1,0 +1,9 @@
+table {
+    padding-top: 10px;
+}
+
+
+tr, td {
+    border: 1px solid red;
+    text-align: center;
+}

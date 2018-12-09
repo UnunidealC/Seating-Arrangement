@@ -300,6 +300,14 @@ class Subject(object):
         result += "SubjectName = '{self._SubjectName}'\n".format(self=self)
         return result
 
+SubjectAbbrev = ['CM', 'BI', 'PH', 'CP', 'MA', 'EC', 'HI', 'GE',
+                 'GP', 'CSC', 'CSE', 'CLL', 'LIT', 'FM', 'TS']
+
+SubjectFull = ['Chemistry', 'Biology', 'Physics', 'Computing', 'Math', 'Economics',
+               'History', 'Geography', 'General Paper', 'China Studies in Chinese',
+               'China Studies in English', 'Chinese Language and Literature',
+               'Literature in English', 'Further Mathematics', 'Translation']
+
 
 class SeatingArrangement(object):
     """SQLite OOP class SeatingArrangement"""
